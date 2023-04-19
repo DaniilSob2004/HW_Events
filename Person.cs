@@ -49,7 +49,7 @@ namespace HW_Events
 
         public void Move(object sender, EventArgs e)
         {
-            Console.WriteLine($"{Name} moves to the {(e as MyEventArgs).Direction}");
+            Console.WriteLine($"{Name} moves to the {(e as MyEventArgs).KeyType}");
         }
     }
 }

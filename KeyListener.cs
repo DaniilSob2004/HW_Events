@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 
 namespace HW_Events
 {
-    public enum Direction { Up, Down, Left, Right };
-
     public class MyEventArgs : EventArgs
     {
-        private Direction? direction;
+        private KeyType? keyType;
 
-        public MyEventArgs() => direction = null;
-        public MyEventArgs(Direction direction) => this.direction = direction;
+        public MyEventArgs() => keyType = null;
+        public MyEventArgs(KeyType keyType) => this.keyType = keyType;
 
-        public Direction? Direction => direction;
+        public KeyType? KeyType => keyType;
     }
+
+
+    // кнопки на которые реагирует класс KeyListener
+    public enum KeyType { Up, Down, Left, Right, Spacebar, Enter };
+
 
     public class KeyListener
     {
-        // кнопки на которые реагирует данный класс
-        private enum KeyType { UpArrow, DownArrow, LeftArrow, RightArrow, Spacebar, Enter };
+        public delegate void KeyPressed(object sender, EventArgs e);
 
-        public delegate void MyDel(object sender, EventArgs e);
-
-        public event MyDel MovePress;
-        public event MyDel SpacebarPress;
-        public event MyDel EnterPress;
+        public event KeyPressed MovePress;
+        public event KeyPressed SpacebarPress;
+        public event KeyPressed EnterPress;
 
         private ConsoleKeyInfo k;
 
@@ -41,7 +41,7 @@ namespace HW_Events
                     k = Console.ReadKey(true);
 
                     // есть ли название кнопки в перечислении KeyType
-                    if (Enum.IsDefined(typeof(KeyType), k.Key.ToString()))
+                    if (Enum.IsDefined(typeof(KeyType), k.Key.ToString().Replace("Arrow", "")))
                     {
                         // если это Spacebar
                         if (k.Key.ToString() == KeyType.Spacebar.ToString())
@@ -62,9 +62,9 @@ namespace HW_Events
                             string move = k.Key.ToString().Replace("Arrow", "");
 
                             // находим значение в перечеслении Direction по названию 'move'
-                            Direction direction = (Direction)Enum.Parse(typeof(Direction), move);
+                            KeyType keyType = (KeyType)Enum.Parse(typeof(KeyType), move);
 
-                            if (MovePress != null) MovePress(this, new MyEventArgs(direction));
+                            if (MovePress != null) MovePress(this, new MyEventArgs(keyType));
                         }
                     }
                 }
